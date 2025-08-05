@@ -12,15 +12,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 export function LoginForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
-	const [answer, setAnswer] = useState(false);
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [formCode, setFormCode] = useState("");
+	const [formType, setFormType] = useState<"newForm" | "answerForm">("newForm");
+
 	const handleLoginForm = (e: FormEvent<HTMLFormElement>) => {
-		console.log(e);
+		e.preventDefault();
+		console.log({ firstName, lastName, formType, formCode });
 	};
+
+	const isValid =
+		firstName.trim() &&
+		lastName.trim() &&
+		(formType === "newForm" || (formType === "answerForm" && formCode.trim()));
+
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
@@ -34,32 +47,67 @@ export function LoginForm({
 					<form onSubmit={(e) => handleLoginForm(e)}>
 						<div className="flex flex-col gap-6 w-full">
 							<div className="grid gap-3">
-								<Label htmlFor="first_name">Nome:</Label>
+								<Label htmlFor="fisrtName">Nome:</Label>
 								<Input
-									id="first_name"
-									className="w-full"
 									type="text"
+									id="fisrtName"
+									value={firstName}
+									className="w-full"
 									placeholder="Ex: Ivancley"
+									onChange={(e) => setFirstName(e.target.value)}
 								/>
-								<Label htmlFor="last_name">Sobrenome:</Label>
-								<Input id="last_name" type="text" placeholder="Ex: Brito" />
+								<Label htmlFor="lastName">Sobrenome:</Label>
+								<Input
+									type="text"
+									id="lastName"
+									value={lastName}
+									className="w-full"
+									placeholder="Ex: Brito"
+									onChange={(e) => setLastName(e.target.value)}
+								/>
 							</div>
-							<div className="flex flex-col gap-2 sm:flex-row w-full justify-end">
-								<Button type="button">Novo formulário</Button>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setAnswer((prev) => !prev)}
-								>
-									Responder formulário
-								</Button>
-							</div>
-							{answer && (
-								<div className="flex flex-col gap-2 sm:flex-row w-full justify-end">
-									<Label htmlFor="form_code">Código do Formulário:</Label>
-									<Input id="form_code" type="text" placeholder="Ex: Brito" />
+							<RadioGroup
+								onValueChange={(value) =>
+									setFormType(value as "newForm" | "answerForm")
+								}
+								defaultValue="newForm"
+							>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="newForm" id="newForm" />
+									<Label htmlFor="newForm">Novo formulário</Label>
 								</div>
-							)}
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="answerForm" id="answerForm" />
+									<Label htmlFor="answerForm">Responder formulário</Label>
+								</div>
+							</RadioGroup>
+							<AnimatePresence>
+								{formType === "answerForm" && (
+									<motion.div
+										initial={{ opacity: 0, y: -10 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0, y: -10 }}
+										transition={{ duration: 0.3 }}
+										className="flex flex-col gap-2 w-full"
+									>
+										<Label htmlFor="form_code">Código do Formulário:</Label>
+										<Input
+											type="text"
+											id="form_code"
+											value={formCode}
+											placeholder="Ex: Brito"
+											onChange={(e) => setFormCode(e.target.value)}
+										/>
+									</motion.div>
+								)}
+							</AnimatePresence>
+							<Button
+								type="submit"
+								disabled={!isValid}
+								className="w-fit place-self-end-safe"
+							>
+								Avançar
+							</Button>
 						</div>
 					</form>
 				</CardContent>
