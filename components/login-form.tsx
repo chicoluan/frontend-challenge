@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,32 +11,46 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState, type FormEvent } from "react";
 
 export function LoginForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
+    const  [answer, setAnswer] = useState(false)
+	const handleLoginForm = (e: FormEvent<HTMLFormElement>) => {
+		console.log(e);
+	};
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle>Login</CardTitle>
-					<CardDescription>Digite seu usuário e senha</CardDescription>
+					<CardTitle>Bem Vindo</CardTitle>
+					<CardDescription>
+						Digite seu nome + sobrenome para criar ou responder um formulário
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form>
-						<div className="flex flex-col gap-6">
+					<form onSubmit={(e) => handleLoginForm(e)}>
+						<div className="flex flex-col gap-6 w-full">
 							<div className="grid gap-3">
-								<Label htmlFor="user">Usuário</Label>
-								<Input id="user" type="text" placeholder="admin" required />
+								<Label htmlFor="first_name">Nome</Label>
+								<Input
+									id="first_name"
+                                    className="w-full"
+									type="text"
+									placeholder="Ex: Ivancley"
+									required
+								/>
+								<Label htmlFor="last_name">Sobrenome</Label>
+								<Input id="last_name" type="text" placeholder="Ex: Brito" required />
 							</div>
-							<div className="grid gap-3">
-								<Label htmlFor="password">Senha</Label>
-								<Input id="password" type="password" required />
-							</div>
-							<div className="flex flex-col gap-3">
-								<Button type="submit" className="w-full">
-									Entrar
+							<div className="flex flex-col gap-2 sm:flex-row w-full justify-end">
+								<Button type="button">
+									Novo formulário
+								</Button>
+								<Button type="button" variant='outline'>
+									Responder formulário
 								</Button>
 							</div>
 						</div>
