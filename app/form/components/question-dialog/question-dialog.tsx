@@ -26,7 +26,7 @@ export default function QuestionDialog(): JSX.Element {
 
   const [title, setTitle] = useState('')
   const [code, setCode] = useState('')
-  const [questionType, setQuestionType] = useState('texto')
+  const [questionType, setQuestionType] = useState('')
   const [required, setRequired] = useState(false)
   const [subQuestion, setSubQuestion] = useState(false)
   const [orientation, setOrientation] = useState('')
@@ -44,7 +44,7 @@ export default function QuestionDialog(): JSX.Element {
       sub_pergunta: subQuestion,
       orientacao_resposta: orientation,
       ordem: order,
-      id_formulatio: data.formId,
+      id_formulario: data.formId,
     })
 
     setLoading(false)
@@ -68,23 +68,25 @@ export default function QuestionDialog(): JSX.Element {
             <Label>Título</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
-          <div className='grid gap-1'>
-            <Label>Código (opcional)</Label>
-            <Input value={code} onChange={(e) => setCode(e.target.value)} />
-          </div>
+          <div className='flex gap-2'>
+            <div className='grid gap-1'>
+              <Label>Código (opcional)</Label>
+              <Input value={code} onChange={(e) => setCode(e.target.value)} />
+            </div>
 
-          <div className='grid gap-1'>
-            <Label>Tipo de pergunta</Label>
-            <Select value={questionType} onValueChange={setQuestionType}>
-              <SelectTrigger>
-                <SelectValue placeholder='Selecione o tipo' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='texto'>Texto</SelectItem>
-                <SelectItem value='alternativa'>Alternativa</SelectItem>
-                <SelectItem value='multipla'>Múltipla escolha</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className='grid gap-1'>
+              <Label>Tipo de pergunta</Label>
+              <Select value={questionType} onValueChange={setQuestionType}>
+                <SelectTrigger>
+                  <SelectValue placeholder='Selecione o tipo' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='texto'>Texto</SelectItem>
+                  <SelectItem value='alternativa'>Alternativa</SelectItem>
+                  <SelectItem value='multipla'>Múltipla escolha</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className='grid gap-1'>

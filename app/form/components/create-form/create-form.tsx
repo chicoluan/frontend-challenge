@@ -16,6 +16,7 @@ import { useDialog } from '@/hooks/use-dialog-store'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/utils/supabase/client'
 import { type JSX, useState } from 'react'
+import QuestionList from '../question-list/question-list'
 
 export default function CreateForm({
   className,
@@ -25,6 +26,7 @@ export default function CreateForm({
   const [description, setDescription] = useState('')
   const [order, setOrder] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [formId, setFormId] = useState<number | null>(null)
 
   const { onOpen } = useDialog()
 
@@ -35,7 +37,7 @@ export default function CreateForm({
     setLoading(true)
     const { data, error } = await supabase
       .from('formulario')
-      .insert([{ titulo: title, descricao: description }])
+      .insert([{ titulo: title, descricao: description, ordem: order }])
       .select()
       .single()
     setLoading(false)
@@ -46,7 +48,7 @@ export default function CreateForm({
     }
 
     if (data) {
-      onOpen('questionDialog', { formId: data.id })
+      setFormId(data.id)
     }
   }
 
@@ -54,49 +56,69 @@ export default function CreateForm({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className='md:text-xl'>Novo formulário</CardTitle>
+          <CardTitle className='md:text-xl'>
+            {formId ? `${title}` : 'Novo formulário'}
+          </CardTitle>
           <CardDescription>
-            Escreva o titulo para adicionar as perguntas
+            {formId
+              ? 'Adicione as perguntas e monte seu formulário'
+              : 'Escreva o titulo para adicionar as perguntas'}
           </CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className='flex flex-col justify-end gap-3'>
-          <div className='flex'>
-            <div className='flex flex-col gap-2'>
-              <Label>Titulo</Label>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder='Digite o título do formulário'
-              />
-            </div>
-            <div className='flex flex-col gap-2'>
-              <Label>Ordem(opcional)</Label>
-              <Input
-                type='number'
-                value={order}
-                onChange={(e) => setOrder(Number(e.target.value))}
-                placeholder='Digite o título do formulário'
-              />
-            </div>
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Label>Descrição</Label>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder='Descreva o propósito do formulário'
-            />
-          </div>
-          <Button
-            type='button'
-            variant='outline'
-            className='self-end hover:cursor-pointer'
-            disabled={title.trim().length === 0}
-            onClick={handleCreateForm}
-          >
-            {loading ? 'Criando...' : 'Adicionar Pergunta'}
-          </Button>
+          {!formId ? (
+            <>
+              <div className='flex w-full flex-col gap-2 sm:flex-row'>
+                <div className='flex w-full flex-col gap-2'>
+                  <Label>Titulo*</Label>
+                  <Input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='Digite o título do formulário'
+                  />
+                </div>
+                <div className='flex flex-col gap-2'>
+                  <Label>Ordem (opcional)</Label>
+                  <Input
+                    type='number'
+                    value={order}
+                    onChange={(e) => setOrder(Number(e.target.value))}
+                    placeholder='Digite o título do formulário'
+                  />
+                </div>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <Label>Descrição</Label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder='Descreva o propósito do formulário'
+                />
+              </div>
+              <Button
+                type='button'
+                variant='outline'
+                className='self-end hover:cursor-pointer'
+                disabled={title.trim().length === 0 || loading}
+                onClick={handleCreateForm}
+              >
+                {loading ? 'Criando...' : 'Criar Formulário'}
+              </Button>
+            </>
+          ) : (
+            <>
+              <QuestionList />
+              <Button
+                type='button'
+                variant='outline'
+                className='self-end hover:cursor-pointer'
+                onClick={() => onOpen('questionDialog', { formId })}
+              >
+                Adicionar Pergunta
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -52,9 +52,9 @@ export function LoginForm({
         </CardHeader>
         <CardContent>
           <form onSubmit={(e) => handleLoginForm(e)}>
-            <div className='flex flex-col gap-6 w-full'>
+            <div className='flex w-full flex-col gap-6'>
               <div className='grid gap-3'>
-                <Label htmlFor='fisrtName'>Nome:</Label>
+                <Label htmlFor='fisrtName'>Nome*</Label>
                 <Input
                   type='text'
                   id='fisrtName'
@@ -63,7 +63,7 @@ export function LoginForm({
                   placeholder='Ex: Ivancley'
                   onChange={(e) => setFirstName(e.target.value)}
                 />
-                <Label htmlFor='lastName'>Sobrenome:</Label>
+                <Label htmlFor='lastName'>Sobrenome*</Label>
                 <Input
                   type='text'
                   id='lastName'
