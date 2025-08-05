@@ -17,7 +17,7 @@ export function LoginForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
-    const  [answer, setAnswer] = useState(false)
+	const [answer, setAnswer] = useState(false);
 	const handleLoginForm = (e: FormEvent<HTMLFormElement>) => {
 		console.log(e);
 	};
@@ -34,25 +34,32 @@ export function LoginForm({
 					<form onSubmit={(e) => handleLoginForm(e)}>
 						<div className="flex flex-col gap-6 w-full">
 							<div className="grid gap-3">
-								<Label htmlFor="first_name">Nome</Label>
+								<Label htmlFor="first_name">Nome:</Label>
 								<Input
 									id="first_name"
-                                    className="w-full"
+									className="w-full"
 									type="text"
 									placeholder="Ex: Ivancley"
-									required
 								/>
-								<Label htmlFor="last_name">Sobrenome</Label>
-								<Input id="last_name" type="text" placeholder="Ex: Brito" required />
+								<Label htmlFor="last_name">Sobrenome:</Label>
+								<Input id="last_name" type="text" placeholder="Ex: Brito" />
 							</div>
 							<div className="flex flex-col gap-2 sm:flex-row w-full justify-end">
-								<Button type="button">
-									Novo formulário
-								</Button>
-								<Button type="button" variant='outline'>
+								<Button type="button">Novo formulário</Button>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => setAnswer((prev) => !prev)}
+								>
 									Responder formulário
 								</Button>
 							</div>
+							{answer && (
+								<div className="flex flex-col gap-2 sm:flex-row w-full justify-end">
+									<Label htmlFor="form_code">Código do Formulário:</Label>
+									<Input id="form_code" type="text" placeholder="Ex: Brito" />
+								</div>
+							)}
 						</div>
 					</form>
 				</CardContent>
