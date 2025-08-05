@@ -33,8 +33,5 @@
       "quoteStyle": "single",
       "jsxQuoteStyle": "single"
     }
-  },
-  "files": {
-    "experimentalScannerIgnores": ["scripts/*.js"]
   }
 }
