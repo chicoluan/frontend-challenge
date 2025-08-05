@@ -13,7 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
 	className,
@@ -23,10 +24,16 @@ export function LoginForm({
 	const [lastName, setLastName] = useState("");
 	const [formCode, setFormCode] = useState("");
 	const [formType, setFormType] = useState<"newForm" | "answerForm">("newForm");
+	const router = useRouter();
 
 	const handleLoginForm = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		console.log({ firstName, lastName, formType, formCode });
+		if (formType === "newForm") {
+			router.push("/form");
+		} else {
+			// Load the Form Data
+		}
 	};
 
 	const isValid =
@@ -104,7 +111,7 @@ export function LoginForm({
 							<Button
 								type="submit"
 								disabled={!isValid}
-								className="w-fit place-self-end-safe"
+								className="w-fit place-self-end-safe hover:cursor-pointer"
 							>
 								Avançar
 							</Button>
